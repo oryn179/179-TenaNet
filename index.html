@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TenaNet | Healthy & Safe Internet</title>
+    <meta name="description" content="Next-generation cybersecurity platform protecting users from phishing, scams, and malicious links." />
+    <!-- Using a generated avatar as favicon for immediate visibility -->
+    <link rel="icon" href="https://ui-avatars.com/api/?name=Tena+Net&background=0D0D0D&color=FF1A1A&bold=true&rounded=true" />
+    
+    <!-- Fonts: Space Grotesk (Headers) and Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Space Grotesk', 'sans-serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+            },
+            colors: {
+              cyber: {
+                dark: '#0D0D0D',
+                gray: '#1A1A1A',
+                red: '#FF1A1A',
+                blue: '#2F8DFF',
+                lightBlue: '#1A73E8',
+                lightGray: '#F2F2F2',
+                white: '#FFFFFF'
+              }
+            },
+            animation: {
+              'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'glitch': 'glitch 1s linear infinite',
+            },
+            keyframes: {
+              glitch: {
+                '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                '62%': { transform: 'translate(0,0) skew(5deg)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0D0D0D; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #FF1A1A; 
+      }
+      
+      .text-glow {
+        text-shadow: 0 0 10px rgba(255, 26, 26, 0.5), 0 0 20px rgba(255, 26, 26, 0.3);
+      }
+      .blue-glow {
+        text-shadow: 0 0 10px rgba(47, 141, 255, 0.5);
+      }
+      
+      /* Matrix Canvas behind everything */
+      #matrix-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        opacity: 0.15;
+        pointer-events: none;
+      }
+
+      /* Custom Cursor from Cursors-4u */
+      * {
+        cursor: url(https://ani.cursors-4u.net/cursors/cur-13/cur1159.ani), url(https://ani.cursors-4u.net/cursors/cur-13/cur1159.png), auto !important;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.25"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-white dark:bg-cyber-dark text-slate-900 dark:text-gray-100 transition-colors duration-300">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
