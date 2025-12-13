@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +13,7 @@ export const Navigation: React.FC<NavigationProps> = ({ darkMode, toggleTheme })
 
   const navLinks = [
     { name: 'About', href: '#about' },
+    { name: 'Courses', href: '#courses' },
     { name: 'Tool', href: '#tool' },
     { name: 'CTF', href: '#ctf' },
     { name: 'Team', href: '#team' },
