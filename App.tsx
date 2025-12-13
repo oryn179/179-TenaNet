@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { MatrixRain } from "./components/MatrixRain";
-import { Navigation } from "./components/Navigation";
-import { HeroSection } from "./components/HeroSection";
-import { InfoSections } from "./components/InfoSections";
-import { ProductSections } from "./components/ProductSections";
-import { ContactFooter } from "./components/ContactFooter";
-import { motion, AnimatePresence } from "framer-motion";
-import { Youtube, PlaySquare, BookOpen } from "lucide-react";
+import React, { useState, useEffect, useRef } from 'react';
+import { MatrixRain } from './components/MatrixRain';
+import { Navigation } from './components/Navigation';
+import { HeroSection } from './components/HeroSection';
+import { InfoSections } from './components/InfoSections';
+import { ProductSections } from './components/ProductSections';
+import { ContactFooter } from './components/ContactFooter';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Youtube, PlaySquare, BookOpen } from 'lucide-react';
 
 // Define course plans
 type Plan = {
@@ -34,12 +34,20 @@ const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
+
+  // Ref for scrolling to course section
+  const courseRef = useRef<HTMLDivElement>(null);
 
   const toggleTheme = () => setDarkMode(!darkMode);
 
+  const scrollToCourse = () => {
+    courseRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    if (darkMode) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
+    if (darkMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
   }, [darkMode]);
 
   return (
@@ -48,7 +56,7 @@ const App: React.FC = () => {
       <MatrixRain darkMode={darkMode} />
 
       {/* Navigation */}
-      <Navigation darkMode={darkMode} toggleTheme={toggleTheme} />
+      <Navigation darkMode={darkMode} toggleTheme={toggleTheme} scrollToCourse={scrollToCourse} />
 
       {/* Main Content */}
       <main className="relative z-10">
@@ -58,15 +66,12 @@ const App: React.FC = () => {
           <ProductSections />
 
           {/* ETHICAL HACKING COURSE SECTION */}
-          <section className="py-24 px-6 bg-gradient-to-b from-black to-zinc-900 text-white">
+          <section ref={courseRef} className="py-24 px-6 bg-gradient-to-b from-black to-zinc-900 text-white">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-bold mb-4 text-red-500">
-                Ethical Hacking Course
-              </h2>
+              <h2 className="text-4xl font-bold mb-4 text-red-500">Ethical Hacking Course</h2>
               <p className="text-gray-400 mb-8">
                 Learn practical ethical hacking techniques with real-world methods.
               </p>
-
               <button
                 onClick={() => setModalOpen(true)}
                 className="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-xl font-semibold transition"
@@ -101,9 +106,7 @@ const App: React.FC = () => {
                     ✕
                   </button>
 
-                  <h3 className="text-2xl font-bold mb-4 text-center">
-                    Choose Your Plan
-                  </h3>
+                  <h3 className="text-2xl font-bold mb-4 text-center">Choose Your Plan</h3>
 
                   <div className="space-y-4">
                     {plans.map((plan) => (
@@ -118,11 +121,7 @@ const App: React.FC = () => {
                       >
                         <div className="flex justify-between items-center">
                           <span>{plan.name}</span>
-                          {plan.price ? (
-                            <span className="font-bold">{plan.price} ETB</span>
-                          ) : (
-                            <span className="text-sm text-gray-400">Coming Soon</span>
-                          )}
+                          {plan.price ? <span className="font-bold">{plan.price} ETB</span> : <span className="text-sm text-gray-400">Coming Soon</span>}
                         </div>
 
                         {plan.description && (
@@ -142,7 +141,10 @@ const App: React.FC = () => {
                   </div>
 
                   {selectedPlan?.price && (
-                    <button className="w-full mt-6 py-4 bg-green-600 hover:bg-green-700 rounded-xl font-bold transition">
+                    <button
+                      className="w-full mt-6 py-4 bg-green-600 hover:bg-green-700 rounded-xl font-bold transition"
+                      onClick={() => setShowPayment(true)}
+                    >
                       Pay (ETB {selectedPlan.price})
                     </button>
                   )}
@@ -152,52 +154,45 @@ const App: React.FC = () => {
           </AnimatePresence>
 
           {/* PAYMENT INFO SECTION */}
-          <section className="py-16 px-6 bg-cyber-gray text-white text-center">
-            <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold mb-6 text-red-500">Payment Option</h2>
+          {showPayment && (
+            <section className="py-16 px-6 bg-cyber-gray text-white text-center">
+              <div className="max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold mb-6 text-red-500">Payment Option</h2>
 
-              <div className="bg-zinc-900 rounded-xl p-6 space-y-4 shadow-lg">
-                <p className="text-lg font-semibold">Telebirr Account</p>
-                <p>Phone No: <span className="font-bold">0978366565</span></p>
-                <p>Name: <span className="font-bold">Alemseged</span></p>
+                <div className="bg-zinc-900 rounded-xl p-6 space-y-4 shadow-lg">
+                  <p className="text-lg font-semibold">Telebirr Account</p>
+                  <p>Phone No: <span className="font-bold">0978366565</span></p>
+                  <p>Name: <span className="font-bold">Alemseged</span></p>
 
-                <button
-                  className="mt-4 px-6 py-3 bg-green-600 hover:bg-green-700 rounded-xl font-bold transition"
-                  onClick={() => alert("Please send your transaction on Telegram")}
-                >
-                  DONE
-                </button>
-
-                <p className="mt-4 text-gray-400">Please send your transaction on Telegram</p>
-
-                <a
-                  href="https://t.me/Confirm_TenaNet_BOT"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition"
-                >
-                  Send On Telegram
-                </a>
-
-                <p className="mt-4 text-gray-400">Please wait for us to see your transaction.</p>
-
-                <p className="mt-2 text-sm text-gray-500">
-                  If your transaction does not appear within 24 hours, contact us via{" "}
                   <a
-                    href="https://t.me/oryn179"
+                    href="https://t.me/Confirm_TenaNet_BOT"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-orange-500 hover:text-red-500 font-bold animate-pulse"
+                    className="inline-block mt-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition"
                   >
-                    Contact here
+                    Send On Telegram
                   </a>
-                  .
-                </p>
-              </div>
-            </div>
-          </section>
 
-          {/* Existing sections */}
+                  <p className="mt-4 text-gray-400">Please wait for us to see your transaction.</p>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    If your transaction does not appear within 24 hours, contact us via{" "}
+                    <a
+                      href="https://t.me/oryn179"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-500 hover:text-red-500 font-bold animate-pulse"
+                    >
+                      Contact here
+                    </a>
+                    .
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Existing Footer */}
           <ContactFooter darkMode={darkMode} />
         </div>
       </main>
