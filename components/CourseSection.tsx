@@ -1,17 +1,22 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Book, Video, Smartphone, Star, Lock, X, Youtube, Clapperboard, Tv, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, Book, Video, Star, Lock, X, Youtube, Clapperboard, Tv, ChevronDown, ChevronUp, Tag, Gift } from 'lucide-react';
 
 interface CourseSectionProps {
-  darkMode?: boolean; // Making it optional to avoid strict type errors if not passed immediately
+  darkMode?: boolean;
 }
 
 export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true }) => {
   const [selectedTier, setSelectedTier] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalStep, setModalStep] = useState<'payment' | 'confirmation'>('payment');
+  const [modalStep, setModalStep] = useState<'coupon' | 'payment' | 'confirmation'>('coupon');
   const [expandedDetails, setExpandedDetails] = useState<string | null>(null);
+  
+  // Coupon State
+  const [couponInput, setCouponInput] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const [discountAmount, setDiscountAmount] = useState(0);
 
   const tiers = [
     {
@@ -67,14 +72,40 @@ export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true })
   const handleBuyClick = (tier: any) => {
     if (tier.disabled) return;
     setSelectedTier(tier);
-    setModalStep('payment');
+    // Reset State
+    setModalStep('coupon');
+    setCouponInput('');
+    setCouponError('');
+    setDiscountAmount(0);
     setIsModalOpen(true);
+  };
+
+  const handleCheckCoupon = () => {
+    if (couponInput.trim() === 'TENA-17NINE') {
+      let discount = 0;
+      if (selectedTier.id === 'standard') discount = 38;
+      if (selectedTier.id === 'vip') discount = 48;
+      if (selectedTier.id === 'vvip') discount = 50;
+      
+      setDiscountAmount(discount);
+      setModalStep('payment');
+    } else {
+      setCouponError('Invalid Coupon Please Try again');
+      // Shake effect logic could be added here
+    }
+  };
+
+  const handleSkipCoupon = () => {
+    setDiscountAmount(0);
+    setModalStep('payment');
   };
 
   const toggleDetails = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setExpandedDetails(expandedDetails === id ? null : id);
   };
+
+  const finalPrice = selectedTier ? selectedTier.price - discountAmount : 0;
 
   return (
     <section id="courses" className="py-24 relative">
@@ -192,7 +223,7 @@ export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true })
         </div>
       </div>
 
-      {/* Payment Modal */}
+      {/* Modal System */}
       <AnimatePresence>
         {isModalOpen && selectedTier && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -212,13 +243,65 @@ export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true })
             >
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                className="absolute top-4 right-4 text-gray-400 hover:text-white z-10"
               >
                 <X size={24} />
               </button>
 
               <div className="p-8">
-                {modalStep === 'payment' ? (
+                {/* ----------------- STEP 1: COUPON CODE ----------------- */}
+                {modalStep === 'coupon' && (
+                  <div className="space-y-6">
+                    <div className="text-center">
+                       <div className="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Tag size={32} className="text-yellow-500" />
+                       </div>
+                       <h3 className="text-2xl font-bold text-white mb-2">Have a Coupon?</h3>
+                       <p className="text-gray-400 text-sm">Enter your exclusive code to unlock discounts.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={couponInput}
+                          onChange={(e) => {
+                            setCouponInput(e.target.value);
+                            setCouponError('');
+                          }}
+                          placeholder="Enter Coupon Code To continue"
+                          className="w-full bg-[#0a0a0a] border border-gray-700 rounded-lg p-4 text-center font-mono text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 transition-colors uppercase"
+                        />
+                        {couponError && (
+                          <p className="text-red-500 text-xs mt-2 text-center animate-pulse">{couponError}</p>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={handleCheckCoupon}
+                        className="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-all shadow-lg shadow-yellow-900/20"
+                      >
+                        Redeem Coupon
+                      </button>
+
+                      <div className="relative flex py-2 items-center">
+                        <div className="flex-grow border-t border-gray-800"></div>
+                        <span className="flex-shrink-0 mx-4 text-gray-600 text-xs">OR</span>
+                        <div className="flex-grow border-t border-gray-800"></div>
+                      </div>
+
+                      <button
+                        onClick={handleSkipCoupon}
+                        className="w-full py-3 bg-transparent hover:bg-white/5 border border-gray-800 hover:border-gray-600 text-gray-400 hover:text-white rounded-lg transition-all text-sm font-medium"
+                      >
+                        Don't Have Coupon Code
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ----------------- STEP 2: PAYMENT ----------------- */}
+                {modalStep === 'payment' && (
                   <div className="space-y-6">
                     <div className="text-center">
                       <h3 className="text-2xl font-display font-bold text-white mb-2">Payment Details</h3>
@@ -230,10 +313,30 @@ export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true })
                     <div className="bg-[#0a0a0a] rounded-xl p-6 border border-gray-800 relative overflow-hidden group">
                       <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                       
-                      <div className="flex items-center justify-between mb-6">
-                         <span className="text-gray-400 font-mono text-sm">AMOUNT</span>
-                         <span className="text-3xl font-bold text-white">{selectedTier.price} ETB</span>
+                      <div className="flex items-center justify-between mb-2">
+                         <span className="text-gray-400 font-mono text-sm">TOTAL AMOUNT</span>
+                         <div className="text-right">
+                           {discountAmount > 0 ? (
+                             <>
+                                <span className="block text-sm text-gray-500 line-through decoration-red-500/50">{selectedTier.price} ETB</span>
+                                <span className="text-3xl font-bold text-white">{finalPrice} ETB</span>
+                             </>
+                           ) : (
+                             <span className="text-3xl font-bold text-white">{selectedTier.price} ETB</span>
+                           )}
+                         </div>
                       </div>
+
+                      {discountAmount > 0 && (
+                        <div className="mb-6 p-2 bg-green-500/10 border border-green-500/30 rounded flex items-center justify-center gap-2">
+                           <Gift size={14} className="text-green-400" />
+                           <span className="text-green-400 text-sm font-bold animate-pulse shadow-green-400" style={{ textShadow: '0 0 10px rgba(74, 222, 128, 0.5)' }}>
+                             You Got {discountAmount}ETB off
+                           </span>
+                        </div>
+                      )}
+
+                      {!discountAmount && <div className="mb-6"></div>}
 
                       <div className="space-y-4">
                         <div className="flex items-center gap-4">
@@ -269,7 +372,10 @@ export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true })
                     </button>
                     <p className="text-center text-xs text-gray-500">Click DONE after you have completed the transfer.</p>
                   </div>
-                ) : (
+                )}
+
+                {/* ----------------- STEP 3: CONFIRMATION ----------------- */}
+                {modalStep === 'confirmation' && (
                   <div className="text-center space-y-6">
                     <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
                       <Check size={40} className="text-green-500" />
@@ -324,3 +430,4 @@ export const CourseSection: React.FC<CourseSectionProps> = ({ darkMode = true })
     </section>
   );
 };
+
