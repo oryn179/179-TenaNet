@@ -135,11 +135,11 @@ export const ProductSections: React.FC = () => {
                     <span className="text-gray-500">tool — bash</span>
                   </div>
                   <div className="p-4 space-y-2 text-green-500">
-                    <p className="flex"><span className="text-blue-500 mr-2">➜</span> <span className="text-white">./tool start --target=192.168.x.x</span></p>
-                    <p className="text-gray-500">[+] Initializing Tool Core...</p>
-                    <p className="text-gray-500">[+] Loading modules...</p>
-                    <p className="text-yellow-500">[!] Analysis: Potentially Vulnerable</p>
-                    <p className="text-gray-500">[+] Scanning ports...</p>
+                    <p className="flex"><span className="text-blue-500 mr-2">➜</span> <span className="text-white">./tenanet.sh</span></p>
+                    <p className="text-gray-500">[+] Searching New Updates...</p>
+                    <p className="text-gray-500">[+] Loading ...</p>
+                    <p className="text-yellow-500">[!] Analysis: Email is Vulnerable</p>
+                    <p className="text-gray-500">[+] Done Thanks For Visiting Us</p>
                     <div className="h-2 w-2/3 bg-gray-800 rounded overflow-hidden mt-4">
                       <div className="h-full bg-cyber-red w-[70%] animate-pulse"></div>
                     </div>
